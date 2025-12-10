@@ -39,6 +39,20 @@ struct ContentView: View {
     // Sheets
     @State private var showOfflineRegions = false
     @State private var showFlightList = false
+    @State private var showAirportPicker = false
+
+    // Available airports for selection
+    private let airports: [(code: String, name: String, coordinate: CLLocationCoordinate2D)] = [
+        ("SFO", "San Francisco", CLLocationCoordinate2D(latitude: 37.6213, longitude: -122.3789)),
+        ("LAX", "Los Angeles", CLLocationCoordinate2D(latitude: 33.9425, longitude: -118.4081)),
+        ("JFK", "New York JFK", CLLocationCoordinate2D(latitude: 40.6413, longitude: -73.7781)),
+        ("ORD", "Chicago O'Hare", CLLocationCoordinate2D(latitude: 41.9742, longitude: -87.9073)),
+        ("DFW", "Dallas Fort Worth", CLLocationCoordinate2D(latitude: 32.8998, longitude: -97.0403)),
+        ("DEN", "Denver", CLLocationCoordinate2D(latitude: 39.8561, longitude: -104.6737)),
+        ("SEA", "Seattle", CLLocationCoordinate2D(latitude: 47.4502, longitude: -122.3088))
+    ]
+
+    @State private var selectedAirportCode = "SFO"
 
     // MARK: - Body
 
@@ -67,19 +81,25 @@ struct ContentView: View {
 
             // Map Controls Overlay
             VStack {
-                // Top bar
+                // Top bar - pushed down to avoid compass/scale
                 HStack {
-                    // Airport info badge
-                    HStack(spacing: 8) {
-                        Image(systemName: "airplane.circle.fill")
-                            .foregroundColor(.blue)
-                        Text("SFO - San Francisco")
-                            .font(.headline)
+                    // Airport picker button
+                    Button(action: { showAirportPicker = true }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "airplane.circle.fill")
+                                .foregroundColor(.blue)
+                            Text(currentAirportName)
+                                .font(.headline)
+                            Image(systemName: "chevron.down")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(20)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(20)
+                    .buttonStyle(.plain)
 
                     Spacer()
 
@@ -95,37 +115,43 @@ struct ContentView: View {
                         .background(.ultraThinMaterial)
                         .cornerRadius(20)
                     }
+                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal)
-                .padding(.top, 8)
+                .padding(.top, 60)  // Push down to avoid compass
 
                 Spacer()
 
-                // Bottom controls
+                // Bottom controls with colors
                 HStack(spacing: 12) {
-                    // Zoom to SFO
+                    // Zoom to airport - blue
                     Button(action: {
-                        mapController?.flyTo(coordinate: MapConstants.Location.sfo, zoom: MapConstants.Location.sfoZoom)
+                        if let airport = airports.first(where: { $0.code == selectedAirportCode }) {
+                            mapController?.flyTo(coordinate: airport.coordinate, zoom: 14)
+                        }
                     }) {
                         Image(systemName: "location.fill")
+                            .foregroundColor(.white)
                             .frame(width: 44, height: 44)
-                            .background(.ultraThinMaterial)
+                            .background(Color.blue)
                             .cornerRadius(22)
                     }
 
-                    // Toggle raster
+                    // Toggle raster - green/gray
                     Button(action: { rasterVisible.toggle() }) {
                         Image(systemName: rasterVisible ? "map.fill" : "map")
+                            .foregroundColor(.white)
                             .frame(width: 44, height: 44)
-                            .background(.ultraThinMaterial)
+                            .background(rasterVisible ? Color.green : Color.gray)
                             .cornerRadius(22)
                     }
 
-                    // Offline regions
+                    // Offline regions - orange
                     Button(action: { showOfflineRegions = true }) {
                         Image(systemName: "arrow.down.circle")
+                            .foregroundColor(.white)
                             .frame(width: 44, height: 44)
-                            .background(.ultraThinMaterial)
+                            .background(Color.orange)
                             .cornerRadius(22)
                     }
 
@@ -288,6 +314,27 @@ struct ContentView: View {
         .onDisappear {
             aircraftSimulator.stopSimulation()
         }
+        .sheet(isPresented: $showAirportPicker) {
+            AirportPickerSheet(
+                airports: airports,
+                selectedCode: $selectedAirportCode,
+                onSelect: { airport in
+                    showAirportPicker = false
+                    mapController?.flyTo(coordinate: airport.coordinate, zoom: 14)
+                }
+            )
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    // MARK: - Computed Properties
+
+    private var currentAirportName: String {
+        if let airport = airports.first(where: { $0.code == selectedAirportCode }) {
+            return "\(airport.code) - \(airport.name)"
+        }
+        return selectedAirportCode
     }
 
     // MARK: - Actions
@@ -344,6 +391,48 @@ struct ContentView: View {
     private func resetDownloadState() {
         downloadProgress = 0
         downloadStage = ""
+    }
+}
+
+// MARK: - Airport Picker Sheet
+
+struct AirportPickerSheet: View {
+    let airports: [(code: String, name: String, coordinate: CLLocationCoordinate2D)]
+    @Binding var selectedCode: String
+    let onSelect: ((code: String, name: String, coordinate: CLLocationCoordinate2D)) -> Void
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(airports, id: \.code) { airport in
+                    Button(action: {
+                        selectedCode = airport.code
+                        onSelect(airport)
+                    }) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(airport.code)
+                                    .font(.headline)
+                                Text(airport.name)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+
+                            if airport.code == selectedCode {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .navigationTitle("Select Airport")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 
