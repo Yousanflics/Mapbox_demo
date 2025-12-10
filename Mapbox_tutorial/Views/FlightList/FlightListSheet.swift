@@ -54,7 +54,7 @@ struct FlightListSheet: View {
         VStack(spacing: 0) {
             // Header
             headerView
-                .padding(.top, 8)
+                .padding(.top, 24)
 
             // Filter tabs
             filterTabs
@@ -88,12 +88,7 @@ struct FlightListSheet: View {
     }
 
     private var headerView: some View {
-        VStack(spacing: 8) {
-            // Drag handle
-            Capsule()
-                .fill(Color.secondary.opacity(0.5))
-                .frame(width: 40, height: 5)
-
+        VStack(spacing: 24) {
             // Title
             HStack {
                 Image(systemName: "airplane")
