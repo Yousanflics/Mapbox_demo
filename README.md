@@ -2,6 +2,8 @@
 
 A Mapbox SDK demo for airport aircraft dispatch visualization, simulating real-time flight tracking at SFO.
 
+![Demo Screenshot](SFP_demo.PNG)
+
 ## Features
 
 - Real-time display of 500 aircraft with position and status
