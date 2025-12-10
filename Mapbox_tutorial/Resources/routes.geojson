@@ -1,0 +1,101 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sfo-msn",
+        "name": "SFO to MSN",
+        "description": "San Francisco to Madison",
+        "departure": "SFO",
+        "arrival": "MSN",
+        "distance": "1850 mi"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.3789, 37.6213],
+          [-121.5, 38.5],
+          [-119.5, 40.0],
+          [-116.0, 41.5],
+          [-112.0, 42.5],
+          [-108.0, 43.0],
+          [-104.0, 43.2],
+          [-100.0, 43.5],
+          [-96.0, 43.5],
+          [-92.0, 43.3],
+          [-89.3375, 43.1399]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sfo-ord",
+        "name": "SFO to ORD",
+        "description": "San Francisco to Chicago O'Hare",
+        "departure": "SFO",
+        "arrival": "ORD",
+        "distance": "1846 mi"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.3789, 37.6213],
+          [-120.5, 38.2],
+          [-118.0, 39.0],
+          [-115.0, 40.0],
+          [-111.0, 40.8],
+          [-107.0, 41.2],
+          [-103.0, 41.5],
+          [-99.0, 41.7],
+          [-95.0, 41.8],
+          [-91.0, 41.9],
+          [-87.9048, 41.9742]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sfo",
+        "name": "San Francisco International Airport",
+        "code": "SFO",
+        "type": "airport",
+        "city": "San Francisco, CA"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.3789, 37.6213]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "msn",
+        "name": "Dane County Regional Airport",
+        "code": "MSN",
+        "type": "airport",
+        "city": "Madison, WI"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.3375, 43.1399]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ord",
+        "name": "O'Hare International Airport",
+        "code": "ORD",
+        "type": "airport",
+        "city": "Chicago, IL"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-87.9048, 41.9742]
+      }
+    }
+  ]
+}

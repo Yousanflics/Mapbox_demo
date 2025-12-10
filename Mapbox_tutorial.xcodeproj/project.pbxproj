@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BC852C1C2EE940DB007FA2D2 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = BC852C1B2EE940DB007FA2D2 /* MapboxMaps */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		BC852B382EE93121007FA2D2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC852C1C2EE940DB007FA2D2 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Mapbox_tutorial;
 			packageProductDependencies = (
+				BC852C1B2EE940DB007FA2D2 /* MapboxMaps */,
 			);
 			productName = Mapbox_tutorial;
 			productReference = BC852B2A2EE9311E007FA2D2 /* Mapbox_tutorial.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = BC852B212EE9311E007FA2D2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BC852C1A2EE940DB007FA2D2 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BC852B2B2EE9311E007FA2D2 /* Products */;
 			projectDirPath = "";
@@ -400,6 +409,9 @@
 				DEVELOPMENT_TEAM = 9LSWG9NAA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to provide navigation and tracking features.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show your current position on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,6 +444,9 @@
 				DEVELOPMENT_TEAM = 9LSWG9NAA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need your location to provide navigation and tracking features.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show your current position on the map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -578,6 +593,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BC852C1A2EE940DB007FA2D2 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BC852C1B2EE940DB007FA2D2 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC852C1A2EE940DB007FA2D2 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BC852B222EE9311E007FA2D2 /* Project object */;
 }
