@@ -9,6 +9,30 @@ import SwiftUI
 import MapboxMaps
 import CoreLocation
 
+// MARK: - Map Layer Mode
+
+enum MapLayerMode: String, CaseIterable {
+    case pureMap = "Pure Map"
+    case withAircraft = "With Aircraft"
+    case withTerrain = "With Terrain"
+
+    var icon: String {
+        switch self {
+        case .pureMap: return "map"
+        case .withAircraft: return "airplane"
+        case .withTerrain: return "mountain.2"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .pureMap: return .gray
+        case .withAircraft: return .blue
+        case .withTerrain: return .green
+        }
+    }
+}
+
 struct ContentView: View {
 
     // MARK: - State
@@ -20,8 +44,10 @@ struct ContentView: View {
 
     // Map controls
     @State private var showUserLocation = true
-    @State private var rasterVisible = false  // Start with raster hidden for cleaner view
+    @State private var rasterVisible = false
+    @State private var aircraftVisible = true
     @State private var selectedRoute: String?
+    @State private var mapLayerMode: MapLayerMode = .withAircraft
 
     // Airport popup
     @State private var selectedAirport: AirportAnnotation?
@@ -137,12 +163,24 @@ struct ContentView: View {
                             .cornerRadius(22)
                     }
 
-                    // Toggle raster - green/gray
-                    Button(action: { rasterVisible.toggle() }) {
-                        Image(systemName: rasterVisible ? "map.fill" : "map")
+                    // Layer mode menu
+                    Menu {
+                        ForEach(MapLayerMode.allCases, id: \.self) { mode in
+                            Button(action: {
+                                mapLayerMode = mode
+                                applyMapLayerMode(mode)
+                            }) {
+                                Label(mode.rawValue, systemImage: mode.icon)
+                                if mapLayerMode == mode {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: mapLayerMode.icon)
                             .foregroundColor(.white)
                             .frame(width: 44, height: 44)
-                            .background(rasterVisible ? Color.green : Color.gray)
+                            .background(mapLayerMode.color)
                             .cornerRadius(22)
                     }
 
@@ -338,6 +376,22 @@ struct ContentView: View {
     }
 
     // MARK: - Actions
+
+    private func applyMapLayerMode(_ mode: MapLayerMode) {
+        switch mode {
+        case .pureMap:
+            aircraftVisible = false
+            rasterVisible = false
+        case .withAircraft:
+            aircraftVisible = true
+            rasterVisible = false
+        case .withTerrain:
+            aircraftVisible = true
+            rasterVisible = true
+        }
+        mapController?.setRasterVisibility(rasterVisible)
+        mapController?.setAircraftVisibility(aircraftVisible)
+    }
 
     private func focusOnRoute(_ routeId: String) {
         mapController?.focusOnRoute(routeId)

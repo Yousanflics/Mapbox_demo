@@ -106,7 +106,7 @@ extension MapViewController {
         let features = gates.map { $0.toPolygonFeature() }
         let featureCollection = FeatureCollection(features: features)
 
-        try? mapView.mapboxMap.updateGeoJSONSource(
+        mapView.mapboxMap.updateGeoJSONSource(
             withId: MapConstants.SourceID.gates,
             geoJSON: .featureCollection(featureCollection)
         )

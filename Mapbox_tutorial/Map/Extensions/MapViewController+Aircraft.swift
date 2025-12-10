@@ -264,7 +264,7 @@ extension MapViewController {
         let aircraftFeatures = aircrafts.map { $0.toFeature() }
         let aircraftCollection = FeatureCollection(features: aircraftFeatures)
 
-        try? mapView.mapboxMap.updateGeoJSONSource(
+        mapView.mapboxMap.updateGeoJSONSource(
             withId: MapConstants.SourceID.aircraft,
             geoJSON: .featureCollection(aircraftCollection)
         )
@@ -313,7 +313,7 @@ extension MapViewController {
 
         let routeCollection = FeatureCollection(features: routeFeatures)
 
-        try? mapView.mapboxMap.updateGeoJSONSource(
+        mapView.mapboxMap.updateGeoJSONSource(
             withId: MapConstants.SourceID.aircraftRoutes,
             geoJSON: .featureCollection(routeCollection)
         )
@@ -324,7 +324,7 @@ extension MapViewController {
     func highlightAircraftRoute(_ aircraft: Aircraft?) {
         guard let aircraft = aircraft, let route = aircraft.route else {
             // Clear highlighted route
-            try? mapView.mapboxMap.updateGeoJSONSource(
+            mapView.mapboxMap.updateGeoJSONSource(
                 withId: MapConstants.SourceID.selectedRoute,
                 geoJSON: .featureCollection(FeatureCollection(features: []))
             )
@@ -343,7 +343,7 @@ extension MapViewController {
         ]
         features.append(feature)
 
-        try? mapView.mapboxMap.updateGeoJSONSource(
+        mapView.mapboxMap.updateGeoJSONSource(
             withId: MapConstants.SourceID.selectedRoute,
             geoJSON: .featureCollection(FeatureCollection(features: features))
         )

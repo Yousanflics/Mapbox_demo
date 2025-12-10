@@ -181,6 +181,42 @@ final class MapViewController: UIViewController {
         }
     }
 
+    func setAircraftVisibility(_ visible: Bool) {
+        guard isMapLoaded else { return }
+        let visibility: Visibility = visible ? .visible : .none
+
+        // Symbol layers
+        let symbolLayers = [
+            MapConstants.LayerID.aircraftSymbol,
+            MapConstants.LayerID.aircraftClusterCount
+        ]
+        for layerId in symbolLayers {
+            try? mapView.mapboxMap.updateLayer(withId: layerId, type: SymbolLayer.self) { layer in
+                layer.visibility = .constant(visibility)
+            }
+        }
+
+        // Circle layers
+        try? mapView.mapboxMap.updateLayer(
+            withId: MapConstants.LayerID.aircraftCluster,
+            type: CircleLayer.self
+        ) { layer in
+            layer.visibility = .constant(visibility)
+        }
+
+        // Line layers
+        let lineLayers = [
+            MapConstants.LayerID.routeTraveled,
+            MapConstants.LayerID.routeRemaining,
+            MapConstants.LayerID.selectedRoute
+        ]
+        for layerId in lineLayers {
+            try? mapView.mapboxMap.updateLayer(withId: layerId, type: LineLayer.self) { layer in
+                layer.visibility = .constant(visibility)
+            }
+        }
+    }
+
     func focusOnRoute(_ routeId: String) {
         let coordinates: [CLLocationCoordinate2D]
 
