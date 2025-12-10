@@ -15,6 +15,12 @@ enum MapConstants {
     enum SourceID {
         static let routes = "routes-source"
         static let raster = "terrain-raster-source"
+        // Aircraft tracking
+        static let aircraft = "aircraft-source"
+        static let aircraftRoutes = "aircraft-routes-source"  // Flight paths
+        static let selectedRoute = "selected-route-source"    // Highlighted selected aircraft route
+        static let gates = "gates-source"
+        static let gateLabels = "gate-labels-source"
     }
 
     enum LayerID {
@@ -24,11 +30,22 @@ enum MapConstants {
         static let airportCircle = "airport-circle-layer"
         static let airportLabel = "airport-label-layer"
         static let raster = "terrain-raster-layer"
+        // Aircraft tracking
+        static let aircraftSymbol = "aircraft-symbol-layer"
+        static let aircraftCluster = "aircraft-cluster-layer"
+        static let aircraftClusterCount = "aircraft-cluster-count-layer"
+        static let routeTraveled = "route-traveled-layer"     // Solid line - traveled path
+        static let routeRemaining = "route-remaining-layer"   // Dashed line - remaining path
+        static let selectedRoute = "selected-route-layer"     // Highlighted route for selected aircraft
+        static let gateFill = "gate-fill-layer"
+        static let gateLine = "gate-line-layer"
+        static let gateLabel = "gate-label-layer"
     }
 
     enum Location {
         static let sanFrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
         static let sfo = CLLocationCoordinate2D(latitude: 37.6213, longitude: -122.3789)
+        static let sfoZoom: CGFloat = 14.0  // Default zoom for airport view
     }
 }
 
@@ -36,6 +53,7 @@ enum MapConstants {
 
 protocol MapViewControllerDelegate: AnyObject {
     func mapViewController(_ controller: MapViewController, didTapAirport airport: AirportAnnotation)
+    func mapViewController(_ controller: MapViewController, didTapAircraft aircraft: Aircraft)
     func mapViewController(_ controller: MapViewController, didUpdateDownloadProgress progress: Double, stage: String)
     func mapViewControllerDidCompleteDownload(_ controller: MapViewController, region: TileRegion)
     func mapViewController(_ controller: MapViewController, didFailDownloadWithError error: Error)
@@ -114,6 +132,10 @@ final class MapViewController: UIViewController {
         addVectorRoutes()
         addRasterOverlay()
         setupTapGesture()
+
+        // Setup GeoSpatio layers
+        //setupGateLayers()
+        setupAircraftLayers()
     }
 
     // MARK: - Public Methods
@@ -337,6 +359,21 @@ extension MapViewController {
     @objc private func handleMapTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: mapView)
 
+        // First check for aircraft tap
+        handleAircraftTap(at: point) { [weak self] aircraft in
+            guard let self = self else { return }
+
+            if let aircraft = aircraft {
+                self.delegate?.mapViewController(self, didTapAircraft: aircraft)
+                return
+            }
+
+            // Then check for airport tap
+            self.queryAirportFeatures(at: point)
+        }
+    }
+
+    private func queryAirportFeatures(at point: CGPoint) {
         mapView.mapboxMap.queryRenderedFeatures(
             with: point,
             options: RenderedQueryOptions(layerIds: [MapConstants.LayerID.airportCircle], filter: nil)

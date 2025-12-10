@@ -1,0 +1,290 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "A1",
+        "terminal": "Terminal 1",
+        "status": "occupied",
+        "assignedFlight": "UA123"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3815, 37.6155],
+          [-122.3812, 37.6155],
+          [-122.3812, 37.6152],
+          [-122.3815, 37.6152],
+          [-122.3815, 37.6155]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "A2",
+        "terminal": "Terminal 1",
+        "status": "available",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3820, 37.6155],
+          [-122.3817, 37.6155],
+          [-122.3817, 37.6152],
+          [-122.3820, 37.6152],
+          [-122.3820, 37.6155]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "A3",
+        "terminal": "Terminal 1",
+        "status": "reserved",
+        "assignedFlight": "AA456"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3825, 37.6155],
+          [-122.3822, 37.6155],
+          [-122.3822, 37.6152],
+          [-122.3825, 37.6152],
+          [-122.3825, 37.6155]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "A4",
+        "terminal": "Terminal 1",
+        "status": "maintenance",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3830, 37.6155],
+          [-122.3827, 37.6155],
+          [-122.3827, 37.6152],
+          [-122.3830, 37.6152],
+          [-122.3830, 37.6155]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "B1",
+        "terminal": "Terminal 2",
+        "status": "occupied",
+        "assignedFlight": "DL789"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3835, 37.6170],
+          [-122.3832, 37.6170],
+          [-122.3832, 37.6167],
+          [-122.3835, 37.6167],
+          [-122.3835, 37.6170]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "B2",
+        "terminal": "Terminal 2",
+        "status": "available",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3840, 37.6170],
+          [-122.3837, 37.6170],
+          [-122.3837, 37.6167],
+          [-122.3840, 37.6167],
+          [-122.3840, 37.6170]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "B3",
+        "terminal": "Terminal 2",
+        "status": "reserved",
+        "assignedFlight": "WN101"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3845, 37.6170],
+          [-122.3842, 37.6170],
+          [-122.3842, 37.6167],
+          [-122.3845, 37.6167],
+          [-122.3845, 37.6170]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "G1",
+        "terminal": "International Terminal",
+        "status": "occupied",
+        "assignedFlight": "JL001"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3890, 37.6140],
+          [-122.3887, 37.6140],
+          [-122.3887, 37.6137],
+          [-122.3890, 37.6137],
+          [-122.3890, 37.6140]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "G2",
+        "terminal": "International Terminal",
+        "status": "available",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3895, 37.6140],
+          [-122.3892, 37.6140],
+          [-122.3892, 37.6137],
+          [-122.3895, 37.6137],
+          [-122.3895, 37.6140]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "G3",
+        "terminal": "International Terminal",
+        "status": "reserved",
+        "assignedFlight": "BA285"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3900, 37.6140],
+          [-122.3897, 37.6140],
+          [-122.3897, 37.6137],
+          [-122.3900, 37.6137],
+          [-122.3900, 37.6140]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "G4",
+        "terminal": "International Terminal",
+        "status": "occupied",
+        "assignedFlight": "SQ001"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3905, 37.6140],
+          [-122.3902, 37.6140],
+          [-122.3902, 37.6137],
+          [-122.3905, 37.6137],
+          [-122.3905, 37.6140]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "C1",
+        "terminal": "Terminal 3",
+        "status": "available",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3860, 37.6180],
+          [-122.3857, 37.6180],
+          [-122.3857, 37.6177],
+          [-122.3860, 37.6177],
+          [-122.3860, 37.6180]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "C2",
+        "terminal": "Terminal 3",
+        "status": "occupied",
+        "assignedFlight": "UA456"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3865, 37.6180],
+          [-122.3862, 37.6180],
+          [-122.3862, 37.6177],
+          [-122.3865, 37.6177],
+          [-122.3865, 37.6180]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "C3",
+        "terminal": "Terminal 3",
+        "status": "reserved",
+        "assignedFlight": "UA789"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3870, 37.6180],
+          [-122.3867, 37.6180],
+          [-122.3867, 37.6177],
+          [-122.3870, 37.6177],
+          [-122.3870, 37.6180]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "C4",
+        "terminal": "Terminal 3",
+        "status": "maintenance",
+        "assignedFlight": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-122.3875, 37.6180],
+          [-122.3872, 37.6180],
+          [-122.3872, 37.6177],
+          [-122.3875, 37.6177],
+          [-122.3875, 37.6180]
+        ]]
+      }
+    }
+  ]
+}

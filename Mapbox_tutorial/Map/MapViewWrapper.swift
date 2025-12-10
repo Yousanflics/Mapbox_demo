@@ -13,12 +13,14 @@ import MapboxMaps
 struct MapViewWrapper: UIViewControllerRepresentable {
 
     @Binding var selectedAirport: AirportAnnotation?
+    @Binding var selectedAircraft: Aircraft?
     @Binding var downloadProgress: Double
     @Binding var downloadStage: String
     @Binding var isDownloading: Bool
     @Binding var downloadComplete: Bool
     @Binding var downloadError: String?
 
+    var aircrafts: [Aircraft]
     var showUserLocation: Bool
     var rasterVisible: Bool
     var onMapControllerReady: ((MapViewController) -> Void)?
@@ -39,6 +41,18 @@ struct MapViewWrapper: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: MapViewController, context: Context) {
         uiViewController.showUserLocation(showUserLocation)
         uiViewController.setRasterVisibility(rasterVisible)
+
+        // Update aircraft positions
+        uiViewController.updateAircraftPositions(aircrafts)
+
+        // Highlight selected aircraft route
+        if let selectedAircraft = selectedAircraft {
+            // Find the aircraft with route data from the current list
+            let aircraftWithRoute = aircrafts.first { $0.id == selectedAircraft.id }
+            uiViewController.highlightAircraftRoute(aircraftWithRoute)
+        } else {
+            uiViewController.highlightAircraftRoute(nil)
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -57,6 +71,10 @@ struct MapViewWrapper: UIViewControllerRepresentable {
 
         func mapViewController(_ controller: MapViewController, didTapAirport airport: AirportAnnotation) {
             parent.selectedAirport = airport
+        }
+
+        func mapViewController(_ controller: MapViewController, didTapAircraft aircraft: Aircraft) {
+            parent.selectedAircraft = aircraft
         }
 
         func mapViewController(_ controller: MapViewController, didUpdateDownloadProgress progress: Double, stage: String) {
@@ -83,11 +101,13 @@ struct MapViewWrapper: UIViewControllerRepresentable {
 #Preview {
     MapViewWrapper(
         selectedAirport: .constant(nil),
+        selectedAircraft: .constant(nil),
         downloadProgress: .constant(0),
         downloadStage: .constant(""),
         isDownloading: .constant(false),
         downloadComplete: .constant(false),
         downloadError: .constant(nil),
+        aircrafts: [],
         showUserLocation: true,
         rasterVisible: true
     )

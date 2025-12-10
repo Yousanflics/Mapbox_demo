@@ -15,13 +15,19 @@ struct ContentView: View {
 
     @State private var mapController: MapViewController?
 
+    // Aircraft simulator
+    @StateObject private var aircraftSimulator = AircraftSimulator()
+
     // Map controls
     @State private var showUserLocation = true
-    @State private var rasterVisible = true
+    @State private var rasterVisible = false  // Start with raster hidden for cleaner view
     @State private var selectedRoute: String?
 
     // Airport popup
     @State private var selectedAirport: AirportAnnotation?
+
+    // Aircraft popup
+    @State private var selectedAircraft: Aircraft?
 
     // Download state
     @State private var downloadProgress: Double = 0
@@ -32,6 +38,7 @@ struct ContentView: View {
 
     // Sheets
     @State private var showOfflineRegions = false
+    @State private var showFlightList = false
 
     // MARK: - Body
 
@@ -40,28 +47,106 @@ struct ContentView: View {
             // Map View
             MapViewWrapper(
                 selectedAirport: $selectedAirport,
+                selectedAircraft: $selectedAircraft,
                 downloadProgress: $downloadProgress,
                 downloadStage: $downloadStage,
                 isDownloading: $isDownloading,
                 downloadComplete: $downloadComplete,
                 downloadError: $downloadError,
+                aircrafts: aircraftSimulator.aircrafts,
                 showUserLocation: showUserLocation,
                 rasterVisible: rasterVisible,
                 onMapControllerReady: { controller in
                     self.mapController = controller
+                    // Fly to SFO and start simulation
+                    controller.flyTo(coordinate: MapConstants.Location.sfo, zoom: MapConstants.Location.sfoZoom)
+                    aircraftSimulator.startSimulation(aircraftCount: 500)
                 }
             )
             .ignoresSafeArea()
 
             // Map Controls Overlay
-            MapControlsView(
-                showUserLocation: $showUserLocation,
-                rasterVisible: $rasterVisible,
-                selectedRoute: $selectedRoute,
-                onDownloadCurrentView: startDownload,
-                onShowOfflineRegions: { showOfflineRegions = true },
-                onFocusRoute: focusOnRoute
-            )
+            VStack {
+                // Top bar
+                HStack {
+                    // Airport info badge
+                    HStack(spacing: 8) {
+                        Image(systemName: "airplane.circle.fill")
+                            .foregroundColor(.blue)
+                        Text("SFO - San Francisco")
+                            .font(.headline)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(20)
+
+                    Spacer()
+
+                    // Flight count badge
+                    Button(action: { showFlightList = true }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "list.bullet")
+                            Text("\(aircraftSimulator.aircrafts.count)")
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(20)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+
+                Spacer()
+
+                // Bottom controls
+                HStack(spacing: 12) {
+                    // Zoom to SFO
+                    Button(action: {
+                        mapController?.flyTo(coordinate: MapConstants.Location.sfo, zoom: MapConstants.Location.sfoZoom)
+                    }) {
+                        Image(systemName: "location.fill")
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(22)
+                    }
+
+                    // Toggle raster
+                    Button(action: { rasterVisible.toggle() }) {
+                        Image(systemName: rasterVisible ? "map.fill" : "map")
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(22)
+                    }
+
+                    // Offline regions
+                    Button(action: { showOfflineRegions = true }) {
+                        Image(systemName: "arrow.down.circle")
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(22)
+                    }
+
+                    Spacer()
+
+                    // Flight list button
+                    Button(action: { showFlightList = true }) {
+                        HStack {
+                            Image(systemName: "airplane")
+                            Text("Flights")
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(22)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 30)
+            }
 
             // Airport Popup
             if let airport = selectedAirport {
@@ -79,6 +164,26 @@ struct ContentView: View {
                     .padding(.bottom, 120)
                 }
                 .animation(.spring(), value: selectedAirport != nil)
+            }
+
+            // Aircraft Popup
+            if let aircraft = selectedAircraft {
+                VStack {
+                    Spacer()
+
+                    AircraftPopupView(
+                        aircraft: aircraft,
+                        onDismiss: { selectedAircraft = nil },
+                        onViewDetails: {
+                            // Could open a detail view
+                            selectedAircraft = nil
+                            showFlightList = true
+                        }
+                    )
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .padding(.bottom, 120)
+                }
+                .animation(.spring(), value: selectedAircraft != nil)
             }
 
             // Download Progress Overlay
@@ -164,6 +269,24 @@ struct ContentView: View {
                     }
                 }
             )
+        }
+        .sheet(isPresented: $showFlightList) {
+            FlightListSheet(
+                aircrafts: aircraftSimulator.aircrafts,
+                onSelectAircraft: { aircraft in
+                    showFlightList = false
+                    // Fly to aircraft and show popup
+                    mapController?.flyTo(coordinate: aircraft.coordinate, zoom: 16)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        selectedAircraft = aircraft
+                    }
+                }
+            )
+            .presentationDetents([.fraction(0.4), .large])
+            .presentationDragIndicator(.visible)
+        }
+        .onDisappear {
+            aircraftSimulator.stopSimulation()
         }
     }
 
